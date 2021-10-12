@@ -13,6 +13,7 @@ public class CRUD {
 	Connection conexion = null;
 	PreparedStatement preparedStatement = null;
 	ResultSet resultSet = null;
+	public static String [] modelos;
 	
 	PreparedStatement preparedStatement1 = null;
 	ResultSet resultSet1 = null;
@@ -23,7 +24,7 @@ public class CRUD {
 		try {	
 	Statement stmt = conexion.createStatement();
 			
-    String sql = "CREATE TABLE IF NOT EXISTS MARCAS2" +
+    String sql = "CREATE TABLE IF NOT EXISTS MARCAS" +
             "(MARCA VARCHAR (20) not NULL, " +
             " PRIMARY KEY ( MARCA ))";
     
@@ -40,7 +41,7 @@ public class CRUD {
 	
 	try {
 		
-		preparedStatement = conexion.prepareStatement("Insert into MARCAS2 (MARCA) values (?)" );
+		preparedStatement = conexion.prepareStatement("Insert into MARCAS (MARCA) values (?)" );
 		preparedStatement.setString(1, Marca);
 		
 		int resultado = preparedStatement.executeUpdate();
@@ -111,7 +112,7 @@ public class CRUD {
     	conexion = Conexion.conectar();
     	try {
     		
-    		preparedStatement = conexion.prepareStatement("SELECT * FROM autos1.marcas2" );
+    		preparedStatement = conexion.prepareStatement("SELECT * FROM autos.marcas" );
     		resultSet = preparedStatement.executeQuery();
     	
     	
@@ -128,7 +129,7 @@ public class CRUD {
     	conexion = Conexion.conectar();
     	try {
     		
-    		preparedStatement = conexion.prepareStatement("SELECT * FROM autos1."+Marca );
+    		preparedStatement = conexion.prepareStatement("SELECT * FROM autos."+Marca );
     		resultSet = preparedStatement.executeQuery();
     	
     	
@@ -141,23 +142,48 @@ public class CRUD {
     	
     }
     
-    public ResultSet Modelo (String Marca, String Linea) {
+    public String [] Modelo (String Marca, String Linea) {
     	conexion = Conexion.conectar();
+   
     	try {
     		
-    		JOptionPane.showMessageDialog(null, Linea + Marca);
-    		preparedStatement = conexion.prepareStatement("SELECT MODELO_RG_FIN FROM autos1."+Marca+ " WHERE LINEA = '"+Linea+"'" );
+    		preparedStatement = conexion.prepareStatement("SELECT MODELO_RG_INI FROM autos."+Marca+"  WHERE LINEA = '"+Linea+"'");
     		resultSet = preparedStatement.executeQuery();
+    		resultSet.next();
+    		preparedStatement1 = conexion.prepareStatement("SELECT MODELO_RG_FIN FROM autos."+Marca+"  WHERE LINEA = '"+Linea+"'");
+    		resultSet1 = preparedStatement1.executeQuery();
+    		resultSet1.next();
     		
-    		JOptionPane.showMessageDialog(null,resultSet.toString());
+    		
+    		String foundType = resultSet.getString(1);
+    		String foundTyp2e = resultSet1.getString(1);
+    		int ini = Integer.parseInt(foundType);
+    		int fin = Integer.parseInt(foundTyp2e);
+    		int h = fin - ini;
+    		int [] numeros = new int [h+1];
+    		modelos = new String [h+1];
+    		int i = 0;
+    		int cont = 0;
+    		int cont2 = 0;
+    	      for (i = ini; i <= fin; i++) {
+    	    	  numeros [cont] = i;
+    	    	  cont= cont+1;
+    	        
+    	        }
     	
     		
-    		
+    		 for (i = ini; i <=fin; i++) {
+   	    	  modelos [cont2] = String.valueOf(numeros[cont2]);
+   	    	  cont2= cont2+1;
+   	        
+   	        }
+    		 
     	}catch(SQLException e4){
     		JOptionPane.showMessageDialog(null, e4.getMessage());
     	};
     	
-    	return resultSet;
+  
+		return modelos;
     	
     }
 }

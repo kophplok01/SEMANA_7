@@ -18,12 +18,23 @@ import PKG1.CRUD;
 import javax.swing.JComboBox;
 import PKG3.Cliente_Login;
 
+import javax.management.modelmbean.ModelMBeanOperationInfo;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+
 public class Liquidacion_Impuestos {
 
 	public JFrame frame;
 	ResultSet lista_marcas = null;
 	public static String Marca ="";
 	public static String Linea ="";
+	public static String Modelo ="";
+	public static String Servicio_publico ="";
+	public static String Traslado_Cuenta ="";
+	public static String Pronto_Pago;
+	private JTextField textField;
+	public static String Valor ="";
+
 
 	/**
 	 * Launch the application.
@@ -54,7 +65,7 @@ public class Liquidacion_Impuestos {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setType(Type.POPUP);
-		frame.setBounds(100, 100, 450, 383);
+		frame.setBounds(100, 100, 450, 429);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -75,7 +86,7 @@ public class Liquidacion_Impuestos {
 		frame.getContentPane().add(lblNewLabel_2);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(275, 133, 76, 22);
+		comboBox.setBounds(275, 133, 93, 22);
 		frame.getContentPane().add(comboBox);
 		CRUD crud = new CRUD();
 		try {
@@ -95,7 +106,7 @@ public class Liquidacion_Impuestos {
 		frame.getContentPane().add(lblNewLabel_3);
 		
 		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(275, 166, 76, 22);
+		comboBox_1.setBounds(275, 166, 93, 22);
 		frame.getContentPane().add(comboBox_1);
 		comboBox.addActionListener(new ActionListener() {
 			@Override
@@ -118,20 +129,6 @@ public class Liquidacion_Impuestos {
 			}
 		});
 		
-		comboBox_1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			Linea= comboBox_1.getSelectedItem().toString();
-		
-			crud.Modelo(Marca, Linea);
-				
-			
-			}
-				
-		
-		});
-
-		
 		
 		JLabel lblNewLabel_4 = new JLabel("Seleccion el Modelo:");
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
@@ -139,17 +136,37 @@ public class Liquidacion_Impuestos {
 		frame.getContentPane().add(lblNewLabel_4);
 		
 		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setBounds(275, 199, 76, 22);
+		comboBox_2.setBounds(275, 199, 93, 22);
 		frame.getContentPane().add(comboBox_2);
+		comboBox_1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			comboBox_2.removeAllItems();
+			Linea= comboBox_1.getSelectedItem().toString();
 		
+			String [] Modelos = crud.Modelo(Marca, Linea);
+
+   		 	for (int i = 0; i < Modelos.length; i++) {
+   		 	comboBox_2.addItem(Modelos[i]);
+  	        
+  	        }
+		
+			
+			}
+				
+		
+		});
 		JLabel lblNewLabel_5 = new JLabel("Es su auto de Servicio Publico?");
 		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_5.setBounds(20, 236, 245, 14);
 		frame.getContentPane().add(lblNewLabel_5);
 		
+		
 		JComboBox comboBox_3 = new JComboBox();
-		comboBox_3.setBounds(275, 232, 76, 22);
+		comboBox_3.setBounds(275, 232, 93, 22);
 		frame.getContentPane().add(comboBox_3);
+		comboBox_3.addItem("Si");
+		comboBox_3.addItem("No");
 		
 		JLabel lblNewLabel_6 = new JLabel("Nombres y apellidos:");
 		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
@@ -163,10 +180,58 @@ public class Liquidacion_Impuestos {
 		frame.getContentPane().add(lblNewLabel_7);
 		Fecha_Aleatoria F_AL = new Fecha_Aleatoria();
 		Date randomDate = F_AL.randomDate("2020-05-01", "2021-05-01");
+		int year = randomDate.getYear()+1900;
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy"); 
 		String gg = randomDate.toString();
 	
 		lblNewLabel_7.setText( "Fecha de ultimo Pago: " +formato.format(randomDate) );
+		
+		JLabel lblNewLabel_8 = new JLabel("Aplica usted para el translado de Cuenta?");
+		lblNewLabel_8.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_8.setBounds(20, 273, 245, 14);
+		frame.getContentPane().add(lblNewLabel_8);
+		
+		JComboBox comboBox_4 = new JComboBox();
+		comboBox_4.setBounds(275, 269, 93, 22);
+		frame.getContentPane().add(comboBox_4);
+		comboBox_4.addItem("Si");
+		comboBox_4.addItem("No");
+		
+		JButton btnNewButton = new JButton("Continuar");
+		btnNewButton.setBounds(176, 356, 89, 23);
+		frame.getContentPane().add(btnNewButton);
+		
+		JLabel lblNewLabel_9 = new JLabel("Introduzca el valor de su Vehiculo:");
+		lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_9.setBounds(20, 310, 245, 14);
+		frame.getContentPane().add(lblNewLabel_9);
+		
+		textField = new JTextField();
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setBounds(275, 307, 93, 20);
+		frame.getContentPane().add(textField);
+		textField.setColumns(10);
+		
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Date dd = new Date();
+				int year2comp = dd.getYear()+1900;
+				
+				if(year2comp - year ==0 ) {
+					Pronto_Pago = "Si";
+				}else {
+					Pronto_Pago = "No";
+				}
+				Servicio_publico = comboBox_3.getSelectedItem().toString();
+				Traslado_Cuenta = comboBox_4.getSelectedItem().toString();
+				Modelo = comboBox_2.getSelectedItem().toString();
+				Valor = textField.getText();
+				
+				TOTAL_PAGAR tt = new TOTAL_PAGAR();
+				tt.frame.setVisible(true);;
+			}	
+			
+		});
 	
 
 	}

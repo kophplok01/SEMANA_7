@@ -22,11 +22,11 @@ public class Conexion {
 			
 			conexion = DriverManager.getConnection(url, usuario, password);
 			  Statement stmt = conexion.createStatement();
-			  String sql = "CREATE DATABASE IF NOT EXISTS AUTOS1";
+			  String sql = "CREATE DATABASE IF NOT EXISTS AUTOS";
 
 		         stmt.executeUpdate(sql);
 		        
-		         conexion = DriverManager.getConnection(url+"/AUTOS1", usuario, password);
+		         conexion = DriverManager.getConnection(url+"/AUTOS", usuario, password);
 		
 
 		}catch(SQLException e){

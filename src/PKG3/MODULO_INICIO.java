@@ -75,7 +75,7 @@ public class MODULO_INICIO {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				D1 frame3 = new D1();
+				Administrador_Login frame3 = new Administrador_Login();
 				frame3.frame.setVisible(true);
 				
 			}
